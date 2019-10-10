@@ -2,6 +2,7 @@ package tindergo
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -210,6 +211,11 @@ type ProfileUpdateRequest struct {
 	DistanceFilter int `json:"distance_filter"`
 }
 
+type LocationUpdateRequest struct {
+	Latitude  float32 `json:"lat"`
+	Longitude float32 `json:"lon"`
+}
+
 func (t *TinderGo) UpdateDistance(miles int) (ProfileUpdateResponse, error) {
 	pfl := ProfileUpdateResponse{}
 	req := ProfileUpdateRequest{DistanceFilter: miles}
@@ -232,4 +238,44 @@ func (t *TinderGo) UpdateDistance(miles int) (ProfileUpdateResponse, error) {
 	}
 
 	return pfl, nil
+}
+
+func (t *TinderGo) UpdateLocation(latitude float32, longitude float32) error {
+	req := LocationUpdateRequest{Latitude: latitude, Longitude: longitude}
+	bReq, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+
+	url := "https://api.gotinder.com/user/ping"
+	_, errs := t.requester.Post(url, string(bReq))
+	if errs != nil {
+		return errs[0]
+	}
+
+	return nil
+}
+
+type SearchPreferences struct {
+	AgeFilterMax   int `json:"age_filter_max"`
+	AgeFilterMin   int `json:"age_filter_min"`
+	DistanceFilter int `json:"distance_filter"`
+	GenderFilter   int `json:"gender_filter"`
+}
+
+func (t *TinderGo) UpdateSearchPreferences(preferences SearchPreferences) error {
+	bReq, err := json.Marshal(preferences)
+	if err != nil {
+		return err
+	}
+
+	url := "https://api.gotinder.com/profile"
+	b, errs := t.requester.Post(url, string(bReq))
+	if errs != nil {
+		return errs[0]
+	}
+
+	fmt.Println(b)
+
+	return nil
 }
