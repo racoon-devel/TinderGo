@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"racoondev.tk/gitea/racoon/tindergo"
 )
 
@@ -12,6 +14,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println("API token", t.APIToken())
 
 	err = t.UpdateLocation(55.741676, 37.624928)
 	if err != nil {

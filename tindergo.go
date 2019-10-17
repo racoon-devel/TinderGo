@@ -22,3 +22,14 @@ func (t *TinderGo) Authenticate(token string) error {
 
 	return nil
 }
+
+func (t *TinderGo) SetAPIToken(token string) {
+	t.auth.APIToken = token
+
+	r := NewTRequest(t.auth.APIToken)
+	t.requester = r
+}
+
+func (t *TinderGo) APIToken() string {
+	return t.auth.APIToken
+}
