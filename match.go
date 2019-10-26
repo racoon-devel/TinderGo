@@ -78,3 +78,13 @@ func (t *TinderGo) Matches() ([]Match, error) {
 
 	return mr.Matches, nil
 }
+
+func (t *TinderGo) Unmatch(matchID string) error {
+	url := "https://api.gotinder.com/user/matches/" + matchID
+	_, errs := t.requester.Delete(url)
+	if errs != nil {
+		return errs[0]
+	}
+
+	return nil
+}

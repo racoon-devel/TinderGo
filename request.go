@@ -10,6 +10,7 @@ import (
 type HttpRequest interface {
 	Get(url string) HttpRequest
 	Post(url string) HttpRequest
+	Delete(url string) HttpRequest
 	Set(name, value string) HttpRequest
 	Send(value string) HttpRequest
 	End() (string, []error)
@@ -30,6 +31,11 @@ func (r *Request) Get(url string) HttpRequest {
 
 func (r *Request) Post(url string) HttpRequest {
 	r.request.Post(url)
+	return r
+}
+
+func (r *Request) Delete(url string) HttpRequest {
+	r.request.Delete(url)
 	return r
 }
 
@@ -72,6 +78,15 @@ func (t *TRequest) Get(url string) (string, []error) {
 func (t *TRequest) Post(url, data string) (string, []error) {
 	return t.requester.Post(url).
 		Send(data).
+		Set("Host", "api.gotinder.com").
+		Set("Authorization", "Token token=\""+t.token+"\"").
+		Set("User-Agent", "Tinder/6.9.1 (iPhone; iOS 10.2; Scale/2.00)").
+		Set("X-Auth-Token", t.token).
+		End()
+}
+
+func (t *TRequest) Delete(url string) (string, []error) {
+	return t.requester.Delete(url).
 		Set("Host", "api.gotinder.com").
 		Set("Authorization", "Token token=\""+t.token+"\"").
 		Set("User-Agent", "Tinder/6.9.1 (iPhone; iOS 10.2; Scale/2.00)").
