@@ -7,9 +7,9 @@ import (
 )
 
 type LikeResponse struct {
-	Match          bool `json:"match,omitempty"`
-	LikesRemaining int  `json:"likes_remaining,omitempty"`
-	Status         int  `json:"status,omitempty"`
+	Match          interface{} `json:"match,omitempty"`
+	LikesRemaining int         `json:"likes_remaining,omitempty"`
+	Status         int         `json:"status,omitempty"`
 }
 
 type SuperLikeResponse struct {
